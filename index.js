@@ -3,9 +3,11 @@ const connectToMongo = require("./db");
 const app = express();
 var cookieParser = require("cookie-parser");
 var cors = require("cors");
+const user_route = require("./routes/user_route");
 
 connectToMongo();
 app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
+app.use("/api", user_route);
 app.listen(5002);
