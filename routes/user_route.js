@@ -27,6 +27,7 @@ route.post(
 );
 // forgot Password api:-  https://banao-nodejs-7a2o.onrender.com/api/forgot_pass
 route.post('/forgot_pass',forgot_pass);
+// reset Password api:-  https://banao-nodejs-7a2o.onrender.com/api/reset_pass/token
 route.patch('/reset_pass/:token',reset_pass)
 
 module.exports = route;

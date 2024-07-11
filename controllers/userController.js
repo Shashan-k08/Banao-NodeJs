@@ -2,6 +2,7 @@ const user_Model = require("../models/User");
 const bcrypt = require("bcryptjs");
 const { validationResult } = require("express-validator");
 const  sendEmail  = require("../Utils/email");
+const crypto = require("crypto");
 const register_user = async (req, res) => {
   let success = false;
   const errors = validationResult(req);
@@ -97,7 +98,24 @@ const forgot_pass = async (req, res) => {
     res.status(500).send("Internal server error");
   }
 };
-const reset_pass = async (req, res) => {};
+const reset_pass = async (req, res) => {
+    const token= crypto.createHash("sha256").update(req.params.token).digest("hex");
+    const user = await user_Model.findOne({passwordResetToken:token});
+    
+    if(!user)
+    {
+        return res.status(400).json({ error: "Token is Invalid or has expired!" });
+    }
+
+    user.password= req.body.password;
+    user.passwordResetToken=undefined;
+    user.passwordResetTokenExpires=undefined;
+    user.save();
+    res.status(200).json({
+        status: "success",
+        message: "Password updated Successfully!",
+      });
+};
 
 module.exports = {
   register_user,
