@@ -65,7 +65,27 @@ const user_login = async (req, res) => {
   }
 };
 
+const forgot_pass = async (req, res) => {
+  const { email } = req.body;
+  try {
+    let user = await user_Model.findOne({ email });
+    if (!user) {
+      return res
+        .status(400)
+        .json({ error: "We could not find user with given email" });
+    }
+
+    const resetToken = user.createResetPasswordToken();
+    await user.save();
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send("Internal server error");
+  }
+};
+const reset_pass = async (req, res) => {};
+
 module.exports = {
   register_user,
   user_login,
+  forgot_pass,
 };

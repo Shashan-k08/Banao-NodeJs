@@ -1,6 +1,6 @@
 const express = require("express");
 const route = express.Router();
-const { register_user, user_login } = require("../controllers/userController");
+const { register_user, user_login,forgot_pass } = require("../controllers/userController");
 const { body } = require("express-validator");
 
 // register api:-  https://banao-nodejs-7a2o.onrender.com/api/register
@@ -25,5 +25,8 @@ route.post(
   ],
   user_login
 );
+// forgot Password api:-  https://banao-nodejs-7a2o.onrender.com/api/forgot_pass
+route.post('/forgot_pass',forgot_pass);
+route.post('/reset_pass')
 
 module.exports = route;
