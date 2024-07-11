@@ -33,3 +33,7 @@ const register_user = async (req, res) => {
     res.status(500).send("Internal server error");
   }
 };
+
+module.exports = {
+  register_user,
+};
