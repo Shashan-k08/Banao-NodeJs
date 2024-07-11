@@ -5,8 +5,8 @@ const sendEmail = (option) => {
     host: "sandbox.smtp.mailtrap.io",
     port: "25, 465, 587 or 2525",
     auth: {
-      user: "469f3a08205972",
-      pass: "3e6b60fd347ad2",
+      user: "ca24d71b306776",
+      pass: "ee2266ade55ba4",
     },
   });
 
