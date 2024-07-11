@@ -1,6 +1,7 @@
 const user_Model = require("../models/User");
 const bcrypt = require("bcryptjs");
 const { validationResult } = require("express-validator");
+const  sendEmail  = require("../Utils/email");
 const register_user = async (req, res) => {
   let success = false;
   const errors = validationResult(req);
@@ -77,6 +78,20 @@ const forgot_pass = async (req, res) => {
 
     const resetToken = user.createResetPasswordToken();
     await user.save();
+    const resetUrl = `${req.protocol}://${req.get(
+      "host"
+    )}/api/reset_pass/${resetToken}`;
+    const message = `We have a received a password reset request.Please use the below link to rest your password \n\n ${resetUrl} \n\n This link is valid for 10 minutes.`;
+    await sendEmail({
+      email: user.email,
+      subject: "Password change request received",
+      message: message,
+    });
+
+    res.status(200).json({
+      status: "success",
+      message: "Password reset link send to the user email Successfully!",
+    });
   } catch (error) {
     console.error(error.message);
     res.status(500).send("Internal server error");
@@ -88,4 +103,5 @@ module.exports = {
   register_user,
   user_login,
   forgot_pass,
+  reset_pass,
 };
