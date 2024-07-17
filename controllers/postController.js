@@ -11,6 +11,15 @@ const create_post = async (req, res) => {
   }
 };
 
+const readAll_post = async (req, res) => {
+  try {
+    const posts = await Post.find();
+    res.json(posts);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
 const read_post = async (req, res) => {
   try {
     const post = await Post.findById(req.params.id);
@@ -73,4 +82,14 @@ const add_cmt = async (req, res) => {
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
+};
+
+module.exports = {
+  create_post,
+  readAll_post,
+  read_post,
+  update_post,
+  delete_post,
+  like_post,
+  add_cmt,
 };
