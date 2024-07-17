@@ -21,15 +21,15 @@ route.get("/readAllPost", readAll_post);
 route.get("/readPost/:id", read_post);
 
 // Update post Api :-  https://banao-nodejs-7a2o.onrender.com/api/updatePost/:id
-route.patch("updatePost/:id", update_post);
+route.patch("/updatePost/:id", update_post);
 
 // Delete post Api :-  https://banao-nodejs-7a2o.onrender.com/api/deletePost/:id
-route.delete("deletePost/:id", delete_post);
+route.delete("/deletePost/:id", delete_post);
 
 // Like post Api :-  https://banao-nodejs-7a2o.onrender.com/api/likePost/:id
-route.post("likePost/:id", like_post);
+route.post("/likePost/:id", like_post);
 
 // Add comment on post Api :-  https://banao-nodejs-7a2o.onrender.com/api/addCmt/:id/comments
-route.post("addCmt/:id/comments", add_cmt);
+route.post("/addCmt/:id/comments", add_cmt);
 
 module.exports = route;
