@@ -31,3 +31,5 @@ route.post("likePost/:id", like_post);
 
 // Add comment on post Api :-  https://banao-nodejs-7a2o.onrender.com/api/addCmt/:id/comments
 route.post("addCmt/:id/comments", add_cmt);
+
+module.exports = route;
