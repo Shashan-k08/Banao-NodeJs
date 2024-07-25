@@ -1,8 +1,13 @@
 const user_Model = require("../models/User");
 const bcrypt = require("bcryptjs");
 const { validationResult } = require("express-validator");
-const  sendEmail  = require("../Utils/email");
+const sendEmail = require("../Utils/email");
 const crypto = require("crypto");
+var jwt = require("jsonwebtoken");
+const fetchuser = require("../middleware/fetchuser");
+const dotenv = require("dotenv");
+dotenv.config({ path: "./config.env" });
+const JWT_SECRET = process.env.JWT_SECRET;
 const register_user = async (req, res) => {
   let success = false;
   const errors = validationResult(req);
@@ -29,8 +34,16 @@ const register_user = async (req, res) => {
         email: email,
       });
       const save_user = await new_user.save();
+      const data = {
+        user: {
+          id: new_user.id,
+        },
+      };
+      const verificationtoken = jwt.sign(data, JWT_SECRET);
       success = true;
-      res.status(200).json({ success, message: "User Registered!" });
+      res
+        .status(200)
+        .json({ success, verificationtoken, message: "User Registered!" });
     }
   } catch (error) {
     console.error(error.message);
@@ -59,8 +72,18 @@ const user_login = async (req, res) => {
       success = false;
       return res.status(400).json({ success, error: "Incorrect Password" });
     }
+    const data = {
+      user: {
+        id: user.id,
+      },
+    };
+    const verificationtoken = jwt.sign(data, JWT_SECRET);
     success = true;
-    res.json({ success, message: "User logged in Successfully!" });
+    res.json({
+      success,
+      verificationtoken,
+      message: "User logged in Successfully!",
+    });
   } catch (error) {
     console.error(error.message);
     res.status(500).send("Internal server error");
@@ -99,22 +122,24 @@ const forgot_pass = async (req, res) => {
   }
 };
 const reset_pass = async (req, res) => {
-    const token= crypto.createHash("sha256").update(req.params.token).digest("hex");
-    const user = await user_Model.findOne({passwordResetToken:token});
-    
-    if(!user)
-    {
-        return res.status(400).json({ error: "Token is Invalid or has expired!" });
-    }
+  const token = crypto
+    .createHash("sha256")
+    .update(req.params.token)
+    .digest("hex");
+  const user = await user_Model.findOne({ passwordResetToken: token });
 
-    user.password= req.body.password;
-    user.passwordResetToken=undefined;
-    user.passwordResetTokenExpires=undefined;
-    user.save();
-    res.status(200).json({
-        status: "success",
-        message: "Password updated Successfully!",
-      });
+  if (!user) {
+    return res.status(400).json({ error: "Token is Invalid or has expired!" });
+  }
+
+  user.password = req.body.password;
+  user.passwordResetToken = undefined;
+  user.passwordResetTokenExpires = undefined;
+  user.save();
+  res.status(200).json({
+    status: "success",
+    message: "Password updated Successfully!",
+  });
 };
 
 module.exports = {

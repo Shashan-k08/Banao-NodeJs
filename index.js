@@ -5,7 +5,6 @@ var cookieParser = require("cookie-parser");
 var cors = require("cors");
 const user_route = require("./routes/user_route");
 const post_route = require("./routes/post_route");
-
 connectToMongo();
 app.use(cors());
 app.use(express.json());
